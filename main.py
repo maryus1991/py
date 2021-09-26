@@ -56,16 +56,19 @@ def audio_slicer(audio_path, start_second, end_second):
     audio_data = sliced_part_of_audio.raw_data
     return audio_data
 
-def audio_translator(audio_data):   
-    # print(audio_data)
-    audio_sound_data = AudioSegment(audio_data,  sample_width=2, frame_rate=44100, channels=2)
-    translator = sr.Recognizer()
-    with sr.AudioFile(audio_sound_data.export(format='wav')) as audio_source:
-    # listen for the data (load audio to memory)
-        audio_data = translator.record(audio_source)
-        # recognize (convert from speech to text)
-        translated_sound_as_string = translator.recognize_google(audio_data)
-        return translated_sound_as_string
+def audio_translator(audio_data):
+    try :    
+        # print(audio_data)
+        audio_sound_data = AudioSegment(audio_data,  sample_width=2, frame_rate=44100, channels=2)
+        translator = sr.Recognizer()
+        with sr.AudioFile(audio_sound_data.export(format='wav')) as audio_source:
+        # listen for the data (load audio to memory)
+            audio_data = translator.record(audio_source)
+            # recognize (convert from speech to text)
+            translated_sound_as_string = translator.recognize_google(audio_data)
+            return translated_sound_as_string
+    except : 
+        return ' '
 
 def second_convertore(seconds):
     sec = seconds % (24 * 3600)
@@ -84,7 +87,7 @@ def subtitle_file_writer(text, endtime, starttime , filename:str):
 
     endtime_complete = second_convertore(endtime)
     starttime_complete = second_convertore(starttime)
-    result_text = f'\n {starttime_complete} --> {endtime_complete}\n {text}' 
+    result_text = f'{starttime_complete} --> {endtime_complete}\n{text}\n\n' 
     subtitle_file.write(result_text)
     subtitle_file.close()
     
