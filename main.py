@@ -1,4 +1,7 @@
-import os
+from logging import ERROR, error
+import os, sys
+import time as Time
+from wave import Error
 from moviepy.editor import AudioFileClip, VideoFileClip
 from pydub import AudioSegment, playback
 import speech_recognition as sr
@@ -41,20 +44,20 @@ def make_progress_bar(file_max_size, downloaded_size,
 
 def video_getter_audio_path_return(path):
     audio_of_video = AudioFileClip(path)
-    file_name = str(os.path.basename(audio_of_video.filename)).replace('media/', '')
-    full_path = str(os.path.abspath(path)).replace(file_name,'')
-    audio_path = '{}{}.mp3'.format(full_path, file_name)
+    file_full_name = str(os.path.basename(audio_of_video.filename)).replace('media/', '')
+    full_path = str(os.path.abspath(path)).replace(file_full_name,'')
+    file_name, file_perfix = os.path.splitext(file_full_name)
+    audio_path = '{}.{}.mp3'.format(full_path, file_name)
     audio_of_video.write_audiofile(audio_path)
     return audio_path
 
-
-# create audio_slicer func
 
 def audio_slicer(audio_path, start_second, end_second):
     audio_clip = AudioSegment.from_mp3(audio_path)
     sliced_part_of_audio = audio_clip[(start_second * 1000):(end_second * 1000) + 150 ]
     audio_data = sliced_part_of_audio.raw_data
     return audio_data
+
 
 def audio_translator(audio_data):
     try :    
@@ -68,7 +71,8 @@ def audio_translator(audio_data):
             translated_sound_as_string = translator.recognize_google(audio_data)
             return translated_sound_as_string
     except : 
-        return ' '
+        return ''
+
 
 def second_convertore(seconds):
     sec = seconds % (24 * 3600)
@@ -79,11 +83,14 @@ def second_convertore(seconds):
     return "%02d:%02d:%02d" % (hour, minute, sec) 
 
 
-def subtitle_file_writer(text, endtime, starttime , filename:str):
+def subtitle_file_writer(text, endtime, starttime , filepath:str):
+    file_full_name = os.path.basename(filepath)
+    file_name , file_perfix = os.path.splitext(file_full_name)
+    file_path = filepath.replace(file_full_name, '')
     try :
-        subtitle_file = open(filename + '.srt', 'a')
+        subtitle_file = open(file_path + file_name + '.srt', 'a')
     except :
-        subtitle_file = open(filename + '.srt', 'w')
+        subtitle_file = open(file_path + file_name + '.srt', 'w')
 
     endtime_complete = second_convertore(endtime)
     starttime_complete = second_convertore(starttime)
@@ -91,21 +98,46 @@ def subtitle_file_writer(text, endtime, starttime , filename:str):
     subtitle_file.write(result_text)
     subtitle_file.close()
     
+
 def main():
-    # video_path = input('enter your video path to translate ...:')
-    # subtitle_file_name = input('enter your subtitle filename ...:')
-    audio_path = 'media/Python_WiFi_DoS_Denial_of_Service_attack.136.mp4.mp3' # video_getter_audio_path_return(video_path)
-    # video_file =  #VideoFileClip(filename=video_path)
-    video_durations = 1061
-    start_point = 0
-    end_point = 2
-    for time in range(0, video_durations, 2):
-        make_progress_bar(video_durations, time)
-        sliced_audio = audio_slicer(audio_path, start_point, end_point)
-        translated_sound_as_text = audio_translator(sliced_audio)
-        subtitle_file_writer(translated_sound_as_text, end_point, start_point, 'example')
-        start_point = end_point
-        end_point += 2
+    first_time = Time.time()
+    print('please be pation the process may take some time')
+    print('\n')
+    try : 
+        video_path = input('enter your video path to translate ...:')
+        try: 
+            audio_path = video_getter_audio_path_return(video_path)
+        except:
+            print('the path is wrong ...')
+            sys.exit()
+        video_file =  VideoFileClip(filename=video_path)
+        video_durations = int(round(video_file.duration, 0))
+        start_point = 0
+        end_point = 2
+        
+        for time in range(0, video_durations, 2):
+            make_progress_bar(video_durations, time, your_message= str(round((Time.time()) - first_time, 0)) + ' s')
+            sliced_audio = audio_slicer(audio_path, start_point, end_point)
+            translated_sound_as_text = audio_translator(sliced_audio)
+            subtitle_file_writer(translated_sound_as_text, end_point, start_point, video_path)
+            start_point = end_point
+            end_point += 2
+        print()
+        os.remove(audio_path)
+    except Error:
+        print(Error.text)
+        try :
+            os.remove(audio_path)
+            file_full_name = os.path.basename(video_path)
+            file_name , file_perfix = os.path.splitext(file_full_name)
+            file_path = video_path.replace(file_full_name, '')
+            os.remove(file_path + file_name + '.srt')
+        except :
+            pass
+    finally:
+        print('we got some error please try again')
+        sys.exit()
+
 
 
 
