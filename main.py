@@ -1,7 +1,5 @@
-from logging import ERROR, error
 import os, sys
 import time as Time
-from wave import Error
 from moviepy.editor import AudioFileClip, VideoFileClip
 from pydub import AudioSegment, playback
 import speech_recognition as sr
@@ -124,8 +122,7 @@ def main():
             end_point += 2
         print()
         os.remove(audio_path)
-    except Error:
-        print(Error.text)
+    except :
         try :
             os.remove(audio_path)
             file_full_name = os.path.basename(video_path)
