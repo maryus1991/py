@@ -1,0 +1,5 @@
+blessings==1.7
+moviepy==1.0.3
+pydub==0.25.1
+SpeechRecognition==3.8.1
+termcolor==1.1.0
