@@ -102,7 +102,7 @@ def subtitle_file_writer(text, endtime, starttime , filepath:str):
 def main():
     first_time = Time.time()
     print('please be pation the process may take some time')
-    print('\n')
+    print('please be sure to contting yo internet')
     try : 
         video_path = input('enter your video path to translate ...:')
         try: 
