@@ -1,0 +1,8 @@
+*.html
+*.pkl
+geckodriver
+*test*
+*.log
+/__pycache__/*
+.vscode/*
+geckodriver-0.30.0/*
