@@ -1,4 +1,3 @@
-from typing import Counter, List
 from selenium import webdriver
 from datetime import datetime
 import time as Time

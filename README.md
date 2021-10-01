@@ -1,4 +1,5 @@
-# ENGLISH SUBTITLE MAKE 
-clone it and run it its simple \
-but the result is depend on google :) \
-befor run please install the dependenses 
+# please do not look as Surprised
+its just a short program to control my teacher \ 
+do not use it its just for iranian \
+and its work with shad 
+
