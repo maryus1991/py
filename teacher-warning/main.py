@@ -10,10 +10,7 @@ driver.get('https://web.shad.ir/')
 
 distance_time_between_sending_massage_in_min = 30 
 teacher_name_list = []
-grope_name_list = ['شبکه آموزشی دانش آموز (شاد) ', 'FATEMEH','MOHAMMAD KAZEM',
-'AMINNEBY'
-
-]
+grope_name_list = []
 
 db_host = 'localhost'
 db_database = 'test'
@@ -44,7 +41,7 @@ def get_localstorage():
     return _localstorage_
 
 def localstorage_editing(): 
-    x = r'"FhjfjAC5JxdJju0nE2I3Y8RIktjsqrXgEgY3T4eccMFps/pMTG/J6KtBr5rSEDj+"'
+    x = r''
     f = f"window.localStorage.setItem('auth', '{x}')"
     driver.execute_script(f)
     driver.execute_script(f)
