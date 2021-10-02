@@ -6,3 +6,4 @@ geckodriver
 /__pycache__/*
 .vscode/*
 geckodriver-0.30.0/*
+grope_name_list=[]
